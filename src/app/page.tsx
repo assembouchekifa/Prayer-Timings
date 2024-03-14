@@ -2,7 +2,7 @@
 
 import Card from "@/components/Card";
 import Timingpreay from "@/components/Timingpreay";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { FaMagnifyingGlassLocation } from "react-icons/fa6";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { v4 } from "uuid";

@@ -13,9 +13,9 @@ function Timingpreay({ cal }: any) {
     for (let i = 0; i < salatarr.length; i++) {
       if (date - gettimeAdan(salatarr[i]) < 0) {
         setTime(
-          `- ${new Date(
-            -(date - gettimeAdan(salatarr[i]))
-          ).getHours()}:${new Date(
+          `- ${
+            new Date(-(date - gettimeAdan(salatarr[i]))).getHours() - 1
+          }:${new Date(
             -(date - gettimeAdan(salatarr[i]))
           ).getMinutes()}:${new Date(
             -(date - gettimeAdan(salatarr[i]))
@@ -28,9 +28,10 @@ function Timingpreay({ cal }: any) {
     if (date - (gettimeAdan(salatarr[0]) + 86400000) < 0) {
       setPreay(salatarr[0]);
       setTime(
-        `- ${new Date(
-          -(date - (gettimeAdan(salatarr[0]) + 86400000))
-        ).getHours()}:${new Date(
+        `- ${
+          new Date(-(date - (gettimeAdan(salatarr[0]) + 86400000))).getHours() -
+          1
+        }:${new Date(
           -(date - (gettimeAdan(salatarr[0]) + 86400000))
         ).getMinutes()}:${new Date(
           -(date - (gettimeAdan(salatarr[0]) + 86400000))
