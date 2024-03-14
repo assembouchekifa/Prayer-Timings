@@ -85,7 +85,6 @@ function Home() {
         console.error("something wrong");
       });
     setDat(data);
-    console.log(data);
   }
 
   return (
