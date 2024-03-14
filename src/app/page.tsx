@@ -5,8 +5,10 @@ import Timingpreay from "@/components/Timingpreay";
 import { useEffect, useState } from "react";
 import { FaMagnifyingGlassLocation } from "react-icons/fa6";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
+import { v4 } from "uuid";
 
 function Home() {
+  let salatarr = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
   let locati: {
     latitude: number;
     longitude: number;
@@ -16,6 +18,7 @@ function Home() {
     countryName: string;
     city: string;
   }>();
+  const [dat, setDat] = useState<any>();
 
   function hundelclic() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -32,7 +35,8 @@ function Home() {
 
   async function getLocation() {
     const data = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${locati?.latitude}&longitude=${locati?.longitude}&localityLanguage=en`
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${locati?.latitude}&longitude=${locati?.longitude}&localityLanguage=en`,
+      { cache: "no-store" }
     )
       .then((data) => {
         return data.json();
@@ -48,7 +52,9 @@ function Home() {
     } else {
       console.error("something wrong");
     }
+    gettimepray();
   }
+
   useEffect(() => {
     let local = localStorage.getItem("local");
     if (local) {
@@ -65,7 +71,22 @@ function Home() {
     getLocation();
   }, []);
 
-  useEffect(() => {}, [city]);
+  async function gettimepray() {
+    const data = await fetch(
+      `https://api.aladhan.com/v1/calendar/${new Date().getFullYear()}/${
+        new Date().getMonth() + 1
+      }?latitude=${locati.latitude}&longitude=${locati.longitude}&method=2`,
+      { cache: "no-store" }
+    )
+      .then((data) => {
+        return data.json();
+      })
+      .catch(() => {
+        console.error("something wrong");
+      });
+    setDat(data);
+    console.log(data);
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center sm:p-24 p-12 md:p-32 text-3xl">
@@ -82,13 +103,45 @@ function Home() {
         <div className="ps-2 mb-2">
           Location :{city?.countryName} {city?.city}
         </div>
-        <Timingpreay />
-        <div className="text-end text-xl pe-2">2024/78/95</div>
-        <Card salat="fajre" time="4:50" border={true} />
-        <Card salat="fajre" time="4:50" border={true} />
-        <Card salat="fajre" time="4:50" border={true} />
-        <Card salat="fajre" time="4:50" border={true} />
-        <Card salat="fajre" time="4:50" border={false} />
+        {dat ? (
+          <Timingpreay cal={dat?.data[new Date().getDate() - 1].timings} />
+        ) : null}
+        <div className="text-end text-xl pe-2">
+          {" "}
+          {dat?.data[new Date().getDate() - 1].date.gregorian.date}{" "}
+        </div>
+        <div className="text-end text-xl pe-2">
+          {" "}
+          {dat?.data[new Date().getDate() - 1].date.hijri.date}{" "}
+        </div>
+        {dat
+          ? salatarr.map((e: any, i: number) => {
+              if (i == salatarr.length - 1) {
+                return (
+                  <Card
+                    key={v4()}
+                    salat={e}
+                    time={dat?.data[new Date().getDate() - 1].timings[e].slice(
+                      0,
+                      -5
+                    )}
+                    border={false}
+                  />
+                );
+              }
+              return (
+                <Card
+                  key={v4()}
+                  salat={e}
+                  time={dat?.data[new Date().getDate() - 1].timings[e].slice(
+                    0,
+                    -5
+                  )}
+                  border={true}
+                />
+              );
+            })
+          : null}
         {!log ? (
           <button
             className="text-lg flex items-center w-full text-center my-2 justify-center"
@@ -121,4 +174,4 @@ function Home() {
 
 export default Home;
 
-// https://api.aladhan.com/v1/calendar/2024/3?latitude=35.6941824&longitude=-0.6782976&method=2
+//

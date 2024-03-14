@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-function Timingpreay() {
+function Timingpreay({ cal }: any) {
   const [time, setTime] = useState<number>();
 
   useEffect(() => {
