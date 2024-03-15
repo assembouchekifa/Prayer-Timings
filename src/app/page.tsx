@@ -88,7 +88,7 @@ function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center sm:p-24 p-12 md:p-32 text-3xl">
+    <main className="flex min-h-screen flex-col items-center justify-center sm:p-24 p-2 md:p-32 text-3xl">
       <div
         style={{ backgroundColor: "#fafafa99" }}
         className="w-full  pt-1 rounded-md"
